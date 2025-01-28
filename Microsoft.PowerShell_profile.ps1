@@ -52,57 +52,6 @@
 
 <#
 	.Synopsis
-	The GUID function generates and displays a GUID.
-	
-	.Description
-	The GUID function generates and displays a GUID. The value of the GUID is copied to the clipboard. Use the param -Count to get a list of GUIDs. 
-	The first is copied to the clipboard
-	
-	.PARAMETER Count
-	Specifies the number of GUIDs to be produced
-	
-	.EXAMPLE
-	PS> guid
-	GUID copied to clipboard: 5ba076d0-1d26-42fe-909d-d7c38ab1b0e8
-
-	GUID
-	----
-	5ba076d0-1d26-42fe-909d-d7c38ab1b0e8
-	
-	.EXAMPLE
-	PS> guid -Count 3
-
-	GUID copied to clipboard: e4d1ba0e-707f-475a-af32-5470e68da332
-
-	GUID
-	----
-	193665f7-e90a-47fa-b27c-e8308e917b69
-	d01ff24a-6456-40a6-b30d-aa1785143c51
-	e4d1ba0e-707f-475a-af32-5470e68da332
-#>
-Function GUID {
-	
-	param ([int]$Count = 1)
-	
-	$guids = @()
-    for ($i = 0; $i -lt $Count; $i++) {
-        $guids += [guid]::NewGuid().ToString()
-    }
-	
-	$script:color = 'Green'
-	Write-Host "`nGUID`n----" -ForegroundColor $script:color
-	$guids | ForEach-Object {
-		$script:color = if ($script:color -eq 'Green') { 'Yellow' } else { 'Green' }
-		Write-Host $_ -ForegroundColor $script:color
-    }
-
-    Write-Host "`nFirst GUID copied to clipboard:" -ForegroundColor Green
-	Write-Host "$($guids[0])`n" -ForegroundColor Yellow
-    Set-Clipboard -Value $guids[0].Trim()
-}
-
-<#
-	.Synopsis
 	Add or remove a path
 	.Description
 	Add or remove a path to the PATH variable
@@ -143,8 +92,57 @@ function Get-MrParameterCount {
     }
 }
 
+<#
+.SYNOPSIS
+    Imports a list of script files from the same directory as the PowerShell profile.
+
+.DESCRIPTION
+    The `Import-ScriptsFromProfileDirectory` function loads and imports a list of specified script files 
+    from the directory where the PowerShell profile is located. This is useful for organizing and 
+    managing multiple script files that you want to be available in every PowerShell session.
+
+.PARAMETER ScriptFiles
+    Specifies an array of script file names to be imported from the profile directory.
+
+.EXAMPLE
+    Import-ScriptsFromProfileDirectory -ScriptFiles @("Get-BaconIpsum.ps1", "AnotherScript.ps1")
+    This example imports the `Get-BaconIpsum.ps1` and `AnotherScript.ps1` files from the profile directory.
+
+.NOTES
+    The function uses the `Split-Path` cmdlet to determine the profile directory and the `Join-Path` cmdlet 
+    to construct the full path to each script file. It then checks if each script file exists using the 
+    `Test-Path` cmdlet and imports it if found.
+#>
+function Import-ScriptsFromProfileDirectory {
+    param (
+        [string[]]$ScriptFiles
+    )
+
+    $profileDirectory = Split-Path -Path $PROFILE -Parent
+
+    foreach ($scriptFile in $ScriptFiles) {
+        $scriptPath = Join-Path -Path $profileDirectory -ChildPath $scriptFile
+        if (Test-Path $scriptPath) {
+            try {
+                . $scriptPath -Scope Global
+                Write-Host "Imported script: $scriptFile"
+            } catch {
+                Write-Warning "Failed to import script: $scriptFile"
+            }
+        } else {
+            Write-Warning "Script file '$scriptFile' not found in profile directory."
+        }
+    }
+}
+
+# Import scripts
+Import-ScriptsFromProfileDirectory -ScriptFiles @("Get-BaconIpsum.ps1", "Get-GUID.ps1")
+
 # Set PATH to include notepad++
 Set-PathVariable -AddPath 'C:\Program Files\Notepad++\'
 
-# Alias
+# Aliases
 Set-Alias -Name np -Value notepad++
+Set-Alias -Name guid -Value Get-GUID
+Set-Alias -Name Get-Bacon -Value Get-BaconIpsum
+Write-Host "Aliases: np, guid, Get-Bacon"

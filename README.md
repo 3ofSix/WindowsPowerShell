@@ -15,3 +15,9 @@ Edit with notepad
 For help on any function
 
 `Get-Help <<function_Name>>`
+
+### Modules
+Create module location 
+`$folder = New-Item -Type Directory -Path $HOME\Documents\PowerShell\Modules`
+
+[Source](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_modules?view=powershell-7.4)
