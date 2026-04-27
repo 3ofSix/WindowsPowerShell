@@ -38,11 +38,11 @@ Function global:Get-GUID {
         $guids += [guid]::NewGuid().ToString()
     }
 	
-	$script:color = 'Green'
-	Write-Host "`nGUID`n----" -ForegroundColor $script:color
+	$color = 'Green'
+	Write-Host "`nGUID`n----" -ForegroundColor $color
 	$guids | ForEach-Object {
-		$script:color = if ($script:color -eq 'Green') { 'Yellow' } else { 'Green' }
-		Write-Host $_ -ForegroundColor $script:color
+		$color = if ($color -eq 'Green') { 'Yellow' } else { 'Green' }
+		Write-Host $_ -ForegroundColor $color
     }
 
     Write-Host "`nFirst GUID copied to clipboard:" -ForegroundColor Green

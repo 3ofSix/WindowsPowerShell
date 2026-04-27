@@ -124,7 +124,7 @@ function Import-ScriptsFromProfileDirectory {
         $scriptPath = Join-Path -Path $profileDirectory -ChildPath $scriptFile
         if (Test-Path $scriptPath) {
             try {
-                . $scriptPath -Scope Global
+                . $scriptPath
                 Write-Host "Imported script: $scriptFile"
             } catch {
                 Write-Warning "Failed to import script: $scriptFile"
@@ -136,7 +136,7 @@ function Import-ScriptsFromProfileDirectory {
 }
 
 # Import scripts
-Import-ScriptsFromProfileDirectory -ScriptFiles @("Get-BaconIpsum.ps1", "Get-GUID.ps1")
+Import-ScriptsFromProfileDirectory -ScriptFiles @("Get-BaconIpsum.ps1", "Get-GUID.ps1", "New-RandomPassword.ps1")
 
 # Set PATH to include notepad++
 Set-PathVariable -AddPath 'C:\Program Files\Notepad++\'
@@ -145,4 +145,5 @@ Set-PathVariable -AddPath 'C:\Program Files\Notepad++\'
 Set-Alias -Name np -Value notepad++
 Set-Alias -Name guid -Value Get-GUID
 Set-Alias -Name Get-Bacon -Value Get-BaconIpsum
-Write-Host "Aliases: np, guid, Get-Bacon"
+Set-Alias -Name pw -Value New-RandomPassword
+Write-Host "Aliases: np, guid, Get-Bacon, pw"
