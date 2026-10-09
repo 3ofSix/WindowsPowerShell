@@ -128,6 +128,7 @@ function Import-ScriptsFromProfileDirectory {
                 Write-Host "Imported script: $scriptFile"
             } catch {
                 Write-Warning "Failed to import script: $scriptFile"
+				Write-Error $_
             }
         } else {
             Write-Warning "Script file '$scriptFile' not found in profile directory."
@@ -136,7 +137,12 @@ function Import-ScriptsFromProfileDirectory {
 }
 
 # Import scripts
-Import-ScriptsFromProfileDirectory -ScriptFiles @("Get-BaconIpsum.ps1", "Get-GUID.ps1", "New-RandomPassword.ps1")
+Import-ScriptsFromProfileDirectory -ScriptFiles @(
+	"Get-BaconIpsum.ps1",
+	"Get-GUID.ps1",
+	"New-RandomPassword.ps1",
+	"Set-ListSeparator.ps1",
+	"Get-ResolvedWorkItems.ps1")
 
 # Set PATH to include notepad++
 Set-PathVariable -AddPath 'C:\Program Files\Notepad++\'
@@ -146,4 +152,6 @@ Set-Alias -Name np -Value notepad++
 Set-Alias -Name guid -Value Get-GUID
 Set-Alias -Name Get-Bacon -Value Get-BaconIpsum
 Set-Alias -Name pw -Value New-RandomPassword
-Write-Host "Aliases: np, guid, Get-Bacon, pw"
+Set-Alias -Name separator -Value Set-ListSeparator
+Set-Alias -Name workItems -Value Get-ResolvedWorkItems
+Write-Host "Aliases: np, guid, Get-Bacon, pw, separator, workItems"
