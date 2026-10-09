@@ -11,7 +11,8 @@ Queries Azure DevOps for User Stories, Bugs and Tickets that:
 Results are copied to the clipboard in the format:
 
 US12345: User story title
-TK12346: Bug title
+TK12346: Ticket title
+BUG 12346: Bug title
 
 .PARAMETER AreaPath
 Area path to search beneath.
@@ -95,7 +96,7 @@ Function global:Get-ResolvedWorkItems {
 		$prefix = switch ($_.fields.'System.WorkItemType') {
 			'User Story' { 'US' }
 			'Ticket'     { 'TK' }
-			'Bug'        { 'TK' }
+			'Bug'        { 'BUG ' }
 			default      { 'WI' }
 		}
 
